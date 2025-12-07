@@ -2,6 +2,8 @@
 
 A full-stack MERN application for managing and analyzing sales transactions with advanced search, filtering, sorting, and pagination capabilities. Built with React, Node.js, MongoDB, and TailwindCSS for a modern, responsive dashboard experience.
 
+**Note:** Due to the 512 MB storage limit of MongoDB Atlas free tier, this project is implemented and tested on a subset of approximately 3,54,000 rows instead of the full 10,00,000-row dataset. The API and all features are designed to scale to the full dataset on a higher tier.
+
 ## Tech Stack
 
 **Frontend:**
