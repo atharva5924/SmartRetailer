@@ -1,4 +1,4 @@
-import Sale from "../models/Sale.module.js";
+import Sale from "../models/sale.module.js";
 
 let filterCache = null;
 let filterCacheTimestamp = 0;

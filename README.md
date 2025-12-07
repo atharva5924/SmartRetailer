@@ -4,6 +4,16 @@ A full-stack MERN application for managing and analyzing sales transactions with
 
 **Note:** Due to the 512 MB storage limit of MongoDB Atlas free tier, this project is implemented and tested on a subset of approximately 3,54,000 rows instead of the full 10,00,000-row dataset. The API and all features are designed to scale to the full dataset on a higher tier.
 
+---
+
+### 🚀 Live Demo
+
+🔗 [Deployed Live on Vercel](https://pin-point-map-frontend.vercel.app/)<br>
+📂 [Backend GitHub Repository](https://github.com/atharva5924/PinPointMap-backend)
+
+
+---
+
 ## Tech Stack
 
 **Frontend:**
