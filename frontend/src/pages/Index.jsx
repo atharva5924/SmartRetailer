@@ -5,7 +5,7 @@ import { FilterBar } from "../components/FilterBar";
 import { MetricCards } from "../components/MetricCards";
 import { SalesTable } from "../components/SalesTable";
 import { Pagination } from "../components/Pagination";
-import { fetchSales, fetchFilterOptions } from "../services/api"; 
+import { fetchSales, fetchFilterOptions } from "../services/api";
 
 const initialFilters = {
   region: "",
@@ -15,7 +15,7 @@ const initialFilters = {
   tags: "",
   paymentMethod: "",
   dateRange: { start: "", end: "" },
-  sortBy: "date-desc", 
+  sortBy: "date-desc",
 };
 
 const Index = () => {
@@ -70,7 +70,6 @@ const Index = () => {
             label: "Product Category",
             options: [...data.categories],
           },
-          // Static fallbacks for others
           {
             id: "ageRange",
             label: "Age Range",
@@ -148,7 +147,7 @@ const Index = () => {
               ? [
                   debouncedFilters.dateRange.start,
                   debouncedFilters.dateRange.end,
-                ] // ← This works!
+                ]
               : null,
         };
 
@@ -157,7 +156,7 @@ const Index = () => {
           filters: filterPayload,
           sort: filters.sortBy || "date-asc",
           page: currentPage,
-          limit: 15,
+          limit: 10,
         });
 
         if (!result?.success) {
@@ -188,7 +187,6 @@ const Index = () => {
     loadSales();
   }, [currentPage, debouncedFilters, searchQuery]);
 
-  // Full-page shell stays; only content area changes for loading/error
   return (
     <div className="flex min-h-screen bg-background">
       <Sidebar />
