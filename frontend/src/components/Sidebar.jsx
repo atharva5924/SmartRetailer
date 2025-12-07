@@ -147,7 +147,7 @@ export function Sidebar() {
       </div>
 
       {/* Navigation */}
-      <nav className="flex-1 p-3 space-y-1 overflow-y-auto bg-gray-100">
+      <nav className="w-65 flex-1 p-3 space-y-1 overflow-y-auto bg-gray-100">
         {menuItems.map((item) => renderMenuItem(item))}
       </nav>
     </aside>
