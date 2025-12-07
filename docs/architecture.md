@@ -167,8 +167,8 @@ Routes are mounted at `/api/sales` prefix and delegate to controllers.
                        │
                        ▼
 ┌──────────────────────────────┐
-│     Index.jsx State Updates  │
-│     filters, searchQuery, page │
+│    Index.jsx State Updates   │
+│    filters, searchQuery, page│
 └──────────────────┬───────────┘
                        │
                 (500ms debounce)
@@ -181,8 +181,8 @@ Routes are mounted at `/api/sales` prefix and delegate to controllers.
                        │
                        ▼
 ┌──────────────────────────────────────────────┐
-│             Backend Express Server            │
-│   sales.routes.js → sales.controllers.js      │
+│             Backend Express Server           │
+│   sales.routes.js → sales.controllers.js     │
 └──────────────────┬───────────────────────────┘
                        │
                        ▼
