@@ -9,7 +9,8 @@ A full-stack MERN application for managing and analyzing sales transactions with
 ### 🚀 Live Demo
 
 🔗 [Deployed Live on Vercel](https://pin-point-map-frontend.vercel.app/)<br>
-📂 [Backend GitHub Repository](https://github.com/atharva5924/PinPointMap-backend)
+📂 [Backend GitHub Repository](https://github.com/atharva5924/PinPointMap-backend)<br>
+📽️ [Video](https://drive.google.com/file/d/1Uxfc-iKX19s1Qpo2PBiE8jxrl_PfegXF/view?usp=sharing)
 
 
 ---
