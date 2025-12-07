@@ -23,18 +23,22 @@ export function SalesTable({ data, loading = false }) {
   return (
     <div className="bg-card rounded-lg border border-border overflow-hidden">
       <div className="overflow-x-auto">
-        <table className="w-full">
+        <table className="w-full mim-w-[1200px]">
           <thead>
             <tr>
-              <th className="table-header-cell">Transaction ID</th>
-              <th className="table-header-cell">Date</th>
-              <th className="table-header-cell">Customer ID</th>
-              <th className="table-header-cell">Customer Name</th>
-              <th className="table-header-cell">Phone</th>
-              <th className="table-header-cell">Gender</th>
-              <th className="table-header-cell">Age</th>
-              <th className="table-header-cell">Product Category</th>
-              <th className="table-header-cell">Quantity</th>
+              <th className="table-header-cell min-w-[150px]">Transaction ID</th>
+              <th className="table-header-cell min-w-[100px]">Date</th>
+              <th className="table-header-cell min-w-[160px]">Customer ID</th>
+              <th className="table-header-cell min-w-[150px]">Customer Name</th>
+              <th className="table-header-cell min-w-[200px]">Phone</th>
+              <th className="table-header-cell min-w-[150px]">Gender</th>
+              <th className="table-header-cell min-w-[50px]">Age</th>
+              <th className="table-header-cell min-w-[160px]">Product Category</th>
+              <th className="table-header-cell min-w-[120px]">Quantity</th>
+              <th className="table-header-cell min-w-[150px]">Total Amount</th>
+              <th className="table-header-cell min-w-[120px]">Customer Region</th>
+              <th className="table-header-cell min-w-[120px]">Product ID</th>
+              <th className="table-header-cell min-w-[120px]">Employee Name</th>
             </tr>
           </thead>
           <tbody>
@@ -70,6 +74,10 @@ export function SalesTable({ data, loading = false }) {
                 <td className="table-cell text-center">
                   {String(record.quantity).padStart(2, "0")}
                 </td>
+                <td className="table-cell">₹{record.totalAmount}</td>
+                <td className="table-cell">{record.customerRegion}</td>
+                <td className="table-cell font-medium">{record.productId}</td>
+                <td className="table-cell">{record.employeeName}</td>
               </tr>
             ))}
           </tbody>

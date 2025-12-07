@@ -39,17 +39,17 @@ export function MetricCards({ metrics }) {
       <MetricCard
         title="Total units sold"
         value={metrics.totalQuantity.toLocaleString("en-IN")}
-        tooltip="Total number of units sold in the selected period"
+        tooltip="Total number of units sold for below products"
       />
       <MetricCard
         title="Total Amount"
         value={`₹${metrics.totalAmount.toLocaleString("en-IN")}`}
-        tooltip="Total revenue generated from sales"
+        tooltip="Total revenue generated for below products"
       />
       <MetricCard
         title="Total Discount"
         value={`₹${metrics.totalDiscount.toLocaleString("en-IN")}`}
-        tooltip="Total discount amount applied"
+        tooltip="Total discount amount applied for below products"
       />
     </div>
   );

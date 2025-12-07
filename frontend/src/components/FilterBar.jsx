@@ -1,40 +1,6 @@
 import { ChevronDown, RotateCcw } from "lucide-react";
 import { cn } from "../libs/utils";
 
-// const filterOptions = [
-//   {
-//     id: "region",
-//     label: "Customer Region",
-//     options: ["All Regions", "North", "South", "East", "West"],
-//   },
-//   {
-//     id: "gender",
-//     label: "Gender",
-//     options: ["All", "Male", "Female", "Other"],
-//   },
-//   {
-//     id: "ageRange",
-//     label: "Age Range",
-//     options: ["All Ages", "18-25", "26-35", "36-45", "46-55", "55+"],
-//   },
-//   {
-//     id: "category",
-//     label: "Product Category",
-//     options: ["All Categories", "Clothing", "Electronics", "Food", "Home"],
-//   },
-//   { id: "tags", label: "Tags", options: ["All Tags", "VIP", "Regular", "New"] },
-//   {
-//     id: "paymentMethod",
-//     label: "Payment Method",
-//     options: ["All Methods", "Cash", "Card", "UPI", "Net Banking"],
-//   },
-//   {
-//     id: "date",
-//     label: "Date",
-//     options: ["All Time", "Today", "This Week", "This Month", "This Year"],
-//   },
-// ];
-
 export function FilterBar({
   filters,
   filterOptions,
@@ -74,7 +40,7 @@ export function FilterBar({
             value={filters[filter.id]}
             onChange={(e) => onFilterChange(filter.id, e.target.value)}
             className={cn(
-              "filter-dropdown appearance-none pr-8 min-w-[120px]",
+              "filter-dropdown appearance-none pr-8 min-w-[130px]",
               "focus:outline-none focus:ring-2 focus:ring-primary/20"
             )}
           >
@@ -90,12 +56,12 @@ export function FilterBar({
       ))}
 
       {/* Sort By */}
-      <div className="relative ml-auto">
+      <div className="relative ml-9">
         <select
           value={filters.sortBy}
           onChange={(e) => onFilterChange("sortBy", e.target.value)}
           className={cn(
-            "filter-dropdown appearance-none pr-8",
+            "filter-dropdown appearance-none pr-8 w-60",
             "focus:outline-none focus:ring-2 focus:ring-primary/20"
           )}
         >

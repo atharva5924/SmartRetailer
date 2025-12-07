@@ -39,7 +39,7 @@ const Index = () => {
     const loadFilterOptions = async () => {
       try {
         setFiltersLoading(true);
-        const data = await fetchFilterOptions(); 
+        const data = await fetchFilterOptions();
         console.log("Fetched filter options:", data);
         // Transform API response → component format
         const options = [
@@ -171,11 +171,13 @@ const Index = () => {
       <Sidebar />
 
       <main className="flex-1 flex flex-col">
-        <header className="flex items-center justify-between px-6 py-4 border-b border-border bg-card">
+        <header className="flex items-center px-6 py-4 border-b border-border bg-card">
           <h1 className="text-xl font-semibold text-foreground">
             Sales Management System
           </h1>
-          <SearchBar value={searchQuery} onChange={setSearchQuery} />
+          <div className="pl-170">
+            <SearchBar value={searchQuery} onChange={setSearchQuery} />
+          </div>
         </header>
 
         <div className="flex-1 p-6 space-y-6 overflow-y-auto">
