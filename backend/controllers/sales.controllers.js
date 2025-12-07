@@ -4,7 +4,6 @@ let filterCache = null;
 let filterCacheTimestamp = 0;
 const FILTER_CACHE_TTL_MS = 5 * 60 * 1000;
 
-// Build filter query
 const buildFilterQuery = (filters) => {
   const query = {};
 
@@ -25,13 +24,12 @@ const buildFilterQuery = (filters) => {
   }
 
   if (filters.tags && filters.tags.length > 0) {
-    // Match documents where tags contains ANY of the selected tags
     const tagRegexes = filters.tags.map(
-      (tag) => new RegExp(`\\b${tag}\\b`, "i") // Word boundary match
+      (tag) => new RegExp(`\\b${tag}\\b`, "i") 
     );
     query.tags = { $in: tagRegexes };
   }
-  // Age Range
+
   if (filters.ageRange) {
     const [min, max] = filters.ageRange.split("-").map(Number);
     query.age = { $gte: min, $lte: max };
@@ -44,12 +42,10 @@ const buildFilterQuery = (filters) => {
       if (!dateStr) return null;
       const parts = dateStr.split("-");
 
-      // If YYYY-MM-DD (from frontend)
       if (parts[0].length === 4) {
-        return dateStr; // Already YYYY-MM-DD
+        return dateStr; 
       }
 
-      // If DD-MM-YYYY (from database)
       const [day, month, year] = parts;
       return `${year}-${month}-${day}`;
     };
@@ -58,21 +54,18 @@ const buildFilterQuery = (filters) => {
     const endDB = convertToComparableFormat(endDateStr);
 
     if (startDB && endDB) {
-      console.log("🔍 Date Query:", { startDB, endDB });
 
-      // Since DB is DD-MM-YYYY but we need YYYY-MM-DD comparison,
-      // use $expr with string conversion
       query.$expr = {
         $and: [
           {
             $gte: [
               {
                 $concat: [
-                  { $substr: ["$date", 6, 4] }, // year
+                  { $substr: ["$date", 6, 4] }, 
                   "-",
-                  { $substr: ["$date", 3, 2] }, // month
+                  { $substr: ["$date", 3, 2] }, 
                   "-",
-                  { $substr: ["$date", 0, 2] }, // day
+                  { $substr: ["$date", 0, 2] }, 
                 ],
               },
               startDB,
@@ -114,7 +107,6 @@ const getSales = async (req, res) => {
 
     let query = buildFilterQuery(JSON.parse(filters));
 
-    // Search
     if (search) {
       const searchRegex = {
         $or: [
@@ -125,11 +117,10 @@ const getSales = async (req, res) => {
       query = { ...query, ...searchRegex };
     }
 
-    // Sorting
     let sortObj = {};
     switch (sort) {
       case "date-desc":
-        sortObj = { date: -1 }; // Newest first
+        sortObj = { date: -1 }; 
         break;
       case "date-asc":
         sortObj = { date: 1 };
@@ -141,26 +132,23 @@ const getSales = async (req, res) => {
         sortObj = { customerName: -1 };
         break;
       case "quantity-desc":
-        sortObj = { quantity: -1 }; // Newest first
+        sortObj = { quantity: -1 }; 
         break;
       case "quantity-asc":
-        sortObj = { quantity: 1 }; // Newest first
+        sortObj = { quantity: 1 }; 
         break;
       default:
         sortObj = { date: -1 };
     }
 
-    // Count total matching documents
     const total = await Sale.countDocuments(query);
 
-    // Fetch current page data
     const data = await Sale.find(query)
       .sort(sortObj)
       .skip((pageNum - 1) * limitNum)
       .limit(limitNum)
-      .lean(); // Use lean() for faster queries
+      .lean(); 
 
-    // Calculate stats ONLY for the 10 rows currently displayed
     const stats = {
       totalQuantity: 0,
       totalAmount: 0,
@@ -180,7 +168,7 @@ const getSales = async (req, res) => {
     res.json({
       success: true,
       data,
-      stats, // NEW: Include stats for current page only
+      stats, 
       pagination: {
         total,
         page: pageNum,
@@ -195,24 +183,19 @@ const getSales = async (req, res) => {
   }
 };
 
-// Get filter options (unique values)
-// Get filter options (unique values) - UPDATED for comma-separated tags
 const getFilterOptions = async (req, res) => {
   try {
     const now = Date.now();
 
-    // 1) If cache is fresh, return it directly
     if (filterCache && now - filterCacheTimestamp < FILTER_CACHE_TTL_MS) {
       return res.json(filterCache);
     }
 
-    // 2) Otherwise compute fresh values
     const regions = await Sale.distinct("customerRegion");
     const genders = await Sale.distinct("gender");
     const categories = await Sale.distinct("productCategory");
     const paymentMethods = await Sale.distinct("paymentMethod");
 
-    // All documents with tags, split comma‑separated
     const docsWithTags = await Sale.find({}, { tags: 1 }).lean();
 
     const allTagsSet = new Set();
@@ -233,7 +216,6 @@ const getFilterOptions = async (req, res) => {
       tags: Array.from(allTagsSet).sort(),
     };
 
-    // 3) Save to cache and return
     filterCache = payload;
     filterCacheTimestamp = now;
 
