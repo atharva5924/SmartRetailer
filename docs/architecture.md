@@ -187,7 +187,7 @@ Routes are mounted at `/api/sales` prefix and delegate to controllers.
                        │
                        ▼
 ┌──────────────────────────────────────────────┐
-│         buildFilterQuery(filters)             │
+│         buildFilterQuery(filters)            │
 │ - region/gender/category → $in               │
 │ - ageRange → $gte/$lte                       │
 │ - dateRange → string range comparison        │
