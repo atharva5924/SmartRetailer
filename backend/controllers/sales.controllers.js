@@ -89,6 +89,12 @@ const getSales = async (req, res) => {
       case "name-desc":
         sortObj = { customerName: -1 };
         break;
+      case "quantity-desc":
+        sortObj = { quantity: -1 }; // Newest first
+        break;
+      case "quantity-asc":
+        sortObj = { quantity: 1 }; // Newest first
+        break;
       default:
         sortObj = { date: -1 };
     }

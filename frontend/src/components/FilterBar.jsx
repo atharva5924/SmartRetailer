@@ -69,6 +69,8 @@ export function FilterBar({
           <option value="name-desc">Sort by: Customer Name (Z-A)</option>
           <option value="date-asc">Sort by: Date (Oldest)</option>
           <option value="date-desc">Sort by: Date (Newest)</option>
+          <option value="quantity-desc">Sort by: Quantity (Desc)</option>
+          <option value="quantity-asc">Sort by: Quantity (Asc)</option>
         </select>
         <ChevronDown className="w-4 h-4 absolute right-2 top-1/2 -translate-y-1/2 pointer-events-none text-muted-foreground" />
       </div>
