@@ -179,7 +179,7 @@ const Index = () => {
           <h1 className="text-xl font-semibold text-foreground">
             Sales Management System
           </h1>
-          <div className="pl-170">
+          <div className="pl-133">
             <SearchBar value={searchQuery} onChange={setSearchQuery} />
           </div>
         </header>
