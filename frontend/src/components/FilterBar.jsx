@@ -1,4 +1,6 @@
 import { ChevronDown, RotateCcw } from "lucide-react";
+import { RangeDropdown } from "./RangeDropdown";
+import { DateDropdown } from "./DateDropdown";
 import { cn } from "../libs/utils";
 
 export function FilterBar({
@@ -32,36 +34,54 @@ export function FilterBar({
       >
         <RotateCcw className="w-4 h-4" />
       </button>
-
       {/* Filter Dropdowns */}
-      {filterOptions.map((filter) => (
-        <div key={filter.id} className="relative">
-          <select
-            value={filters[filter.id]}
-            onChange={(e) => onFilterChange(filter.id, e.target.value)}
-            className={cn(
-              "filter-dropdown appearance-none pr-8 min-w-[130px]",
-              "focus:outline-none focus:ring-2 focus:ring-primary/20"
-            )}
-          >
-            <option value="">{filter.label}</option>
-            {filter.options.map((option) => (
-              <option key={option} value={option}>
-                {option}
-              </option>
-            ))}
-          </select>
-          <ChevronDown className="w-4 h-4 absolute right-2 top-1/2 -translate-y-1/2 pointer-events-none text-muted-foreground" />
-        </div>
-      ))}
-
+      {filterOptions
+        .filter((f) => !["ageRange", "date"].includes(f.id))
+        .map((filter) => (
+          <div key={filter.id} className="relative">
+            <select
+              value={filters[filter.id]}
+              onChange={(e) => onFilterChange(filter.id, e.target.value)}
+              className={cn(
+                "filter-dropdown appearance-none",
+                filter.id === "category" && "min-w-[140px]",
+                filter.id === "region" && "min-w-[125px]",
+                filter.id === "gender" && "min-w-[75px]",
+                filter.id === "region" && "min-w-[130px]",
+                filter.id === "paymentMethod" && "min-w-[140px]",
+                "focus:outline-none focus:ring-2 focus:ring-primary/20"
+              )}
+            >
+              <option value="">{filter.label}</option>
+              {filter.options.map((option) => (
+                <option key={option} value={option}>
+                  {option}
+                </option>
+              ))}
+            </select>
+            <ChevronDown className="w-4 h-4 absolute right-2 top-1/2 -translate-y-1/2 pointer-events-none text-muted-foreground" />
+          </div>
+        ))}
+      <RangeDropdown
+        id="ageRange"
+        label="Age"
+        min={18}
+        max={75}
+        value={filters.ageRange}
+        onChange={(value) => onFilterChange("ageRange", value)}
+      />
+      <DateDropdown
+        key="dateRange"
+        value={filters.dateRange}
+        onChange={(value) => onFilterChange("dateRange", value)}
+      />
       {/* Sort By */}
-      <div className="relative ml-8">
+      <div className="relative ml-30">
         <select
           value={filters.sortBy}
           onChange={(e) => onFilterChange("sortBy", e.target.value)}
           className={cn(
-            "filter-dropdown appearance-none pr-8 w-60",
+            "filter-dropdown appearance-none pr-8 w-70",
             "focus:outline-none focus:ring-2 focus:ring-primary/20"
           )}
         >

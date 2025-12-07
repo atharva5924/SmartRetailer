@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import { Sidebar } from "../components/Sidebar";
 import { SearchBar } from "../components/SearchBar";
 import { FilterBar } from "../components/FilterBar";
@@ -10,11 +10,11 @@ import { fetchSales, fetchFilterOptions } from "../services/api"; // adjust path
 const initialFilters = {
   region: "",
   gender: "",
-  ageRange: "",
+  ageRange: { min: 18, max: 75 },
   category: "",
   tags: "",
   paymentMethod: "",
-  date: "",
+  dateRange: { start: "", end: "" },
   sortBy: "date-desc", // backend expects "date" | "quantity" | "customerName"
 };
 
@@ -33,6 +33,24 @@ const Index = () => {
   const [error, setError] = useState(null);
   const [filterOptions, setFilterOptions] = useState([]);
   const [filtersLoading, setFiltersLoading] = useState(true);
+  const [debouncedFilters, setDebouncedFilters] = useState(filters);
+  const debounceTimeoutRef = useRef(null);
+
+  useEffect(() => {
+    if (debounceTimeoutRef.current) {
+      clearTimeout(debounceTimeoutRef.current);
+    }
+
+    debounceTimeoutRef.current = setTimeout(() => {
+      setDebouncedFilters(filters);
+    }, 500);
+
+    return () => {
+      if (debounceTimeoutRef.current) {
+        clearTimeout(debounceTimeoutRef.current);
+      }
+    };
+  }, [filters]);
 
   // Fetch on mount (use your api.js function)
   useEffect(() => {
@@ -48,7 +66,7 @@ const Index = () => {
             label: "Customer Region",
             options: [...data.regions],
           },
-          { id: "gender", label: "Gender", options: ["All", ...data.genders] },
+          { id: "gender", label: "Gender", options: [...data.genders] },
           {
             id: "category",
             label: "Product Category",
@@ -116,20 +134,27 @@ const Index = () => {
     const loadSales = async () => {
       setLoading(true);
       setError(null);
-      console.log("Loading sales with:", {
-        searchQuery,
-        filters,
-        currentPage,
-      }); 
       try {
         const filterPayload = {
-          region: filters.region ? [filters.region] : [],
-          gender: filters.gender ? [filters.gender] : [],
-          ageRange: filters.ageRange || null,
-          category: filters.category ? [filters.category] : [],
-          tags: filters.tags ? [filters.tags] : [],
-          paymentMethod: filters.paymentMethod ? [filters.paymentMethod] : [],
-          dateRange: filters.date ? [filters.date] : null,
+          region: debouncedFilters.region ? [debouncedFilters.region] : [],
+          gender: debouncedFilters.gender ? [debouncedFilters.gender] : [],
+          ageRange: debouncedFilters.ageRange
+            ? `${debouncedFilters.ageRange.min}-${debouncedFilters.ageRange.max}`
+            : null,
+          category: debouncedFilters.category
+            ? [debouncedFilters.category]
+            : [],
+          tags: debouncedFilters.tags ? [debouncedFilters.tags] : [],
+          paymentMethod: debouncedFilters.paymentMethod
+            ? [debouncedFilters.paymentMethod]
+            : [],
+          dateRange:
+            debouncedFilters.dateRange?.start && debouncedFilters.dateRange?.end
+              ? [
+                  debouncedFilters.dateRange.start,
+                  debouncedFilters.dateRange.end,
+                ] // ← This works!
+              : null,
         };
 
         const result = await fetchSales({
@@ -143,7 +168,6 @@ const Index = () => {
         if (!result?.success) {
           throw new Error(result?.error || "Failed to fetch sales");
         }
-        console.log("Fetched sales data:", result);
         setTableData(result.data || []);
         setMetrics({
           totalQuantity: result.stats?.totalQuantity || 0,
@@ -167,7 +191,7 @@ const Index = () => {
     };
 
     loadSales();
-  }, [currentPage, filters, searchQuery]);
+  }, [currentPage, debouncedFilters, searchQuery]);
 
   // Full-page shell stays; only content area changes for loading/error
   return (

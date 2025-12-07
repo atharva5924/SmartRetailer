@@ -37,13 +37,64 @@ const buildFilterQuery = (filters) => {
     query.age = { $gte: min, $lte: max };
   }
 
-  // Date Range
   if (filters.dateRange && filters.dateRange.length === 2) {
-    const [startDate, endDate] = filters.dateRange;
-    query.date = {
-      $gte: new Date(startDate),
-      $lte: new Date(endDate),
+    const [startDateStr, endDateStr] = filters.dateRange;
+
+    const convertToComparableFormat = (dateStr) => {
+      if (!dateStr) return null;
+      const parts = dateStr.split("-");
+
+      // If YYYY-MM-DD (from frontend)
+      if (parts[0].length === 4) {
+        return dateStr; // Already YYYY-MM-DD
+      }
+
+      // If DD-MM-YYYY (from database)
+      const [day, month, year] = parts;
+      return `${year}-${month}-${day}`;
     };
+
+    const startDB = convertToComparableFormat(startDateStr);
+    const endDB = convertToComparableFormat(endDateStr);
+
+    if (startDB && endDB) {
+      console.log("🔍 Date Query:", { startDB, endDB });
+
+      // Since DB is DD-MM-YYYY but we need YYYY-MM-DD comparison,
+      // use $expr with string conversion
+      query.$expr = {
+        $and: [
+          {
+            $gte: [
+              {
+                $concat: [
+                  { $substr: ["$date", 6, 4] }, // year
+                  "-",
+                  { $substr: ["$date", 3, 2] }, // month
+                  "-",
+                  { $substr: ["$date", 0, 2] }, // day
+                ],
+              },
+              startDB,
+            ],
+          },
+          {
+            $lte: [
+              {
+                $concat: [
+                  { $substr: ["$date", 6, 4] },
+                  "-",
+                  { $substr: ["$date", 3, 2] },
+                  "-",
+                  { $substr: ["$date", 0, 2] },
+                ],
+              },
+              endDB,
+            ],
+          },
+        ],
+      };
+    }
   }
 
   return query;
