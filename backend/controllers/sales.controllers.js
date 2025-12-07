@@ -25,7 +25,7 @@ const buildFilterQuery = (filters) => {
 
   if (filters.tags && filters.tags.length > 0) {
     const tagRegexes = filters.tags.map(
-      (tag) => new RegExp(`\\b${tag}\\b`, "i") 
+      (tag) => new RegExp(`\\b${tag}\\b`, "i")
     );
     query.tags = { $in: tagRegexes };
   }
@@ -43,7 +43,7 @@ const buildFilterQuery = (filters) => {
       const parts = dateStr.split("-");
 
       if (parts[0].length === 4) {
-        return dateStr; 
+        return dateStr;
       }
 
       const [day, month, year] = parts;
@@ -54,18 +54,17 @@ const buildFilterQuery = (filters) => {
     const endDB = convertToComparableFormat(endDateStr);
 
     if (startDB && endDB) {
-
       query.$expr = {
         $and: [
           {
             $gte: [
               {
                 $concat: [
-                  { $substr: ["$date", 6, 4] }, 
+                  { $substr: ["$date", 6, 4] },
                   "-",
-                  { $substr: ["$date", 3, 2] }, 
+                  { $substr: ["$date", 3, 2] },
                   "-",
-                  { $substr: ["$date", 0, 2] }, 
+                  { $substr: ["$date", 0, 2] },
                 ],
               },
               startDB,
@@ -120,7 +119,7 @@ const getSales = async (req, res) => {
     let sortObj = {};
     switch (sort) {
       case "date-desc":
-        sortObj = { date: -1 }; 
+        sortObj = { date: -1 };
         break;
       case "date-asc":
         sortObj = { date: 1 };
@@ -132,10 +131,10 @@ const getSales = async (req, res) => {
         sortObj = { customerName: -1 };
         break;
       case "quantity-desc":
-        sortObj = { quantity: -1 }; 
+        sortObj = { quantity: -1 };
         break;
       case "quantity-asc":
-        sortObj = { quantity: 1 }; 
+        sortObj = { quantity: 1 };
         break;
       default:
         sortObj = { date: -1 };
@@ -147,7 +146,7 @@ const getSales = async (req, res) => {
       .sort(sortObj)
       .skip((pageNum - 1) * limitNum)
       .limit(limitNum)
-      .lean(); 
+      .lean();
 
     const stats = {
       totalQuantity: 0,
@@ -168,7 +167,7 @@ const getSales = async (req, res) => {
     res.json({
       success: true,
       data,
-      stats, 
+      stats,
       pagination: {
         total,
         page: pageNum,
@@ -182,11 +181,9 @@ const getSales = async (req, res) => {
     res.status(500).json({ success: false, error: error.message });
   }
 };
-
 const getFilterOptions = async (req, res) => {
   try {
     const now = Date.now();
-
     if (filterCache && now - filterCacheTimestamp < FILTER_CACHE_TTL_MS) {
       return res.json(filterCache);
     }
@@ -196,24 +193,33 @@ const getFilterOptions = async (req, res) => {
     const categories = await Sale.distinct("productCategory");
     const paymentMethods = await Sale.distinct("paymentMethod");
 
-    const docsWithTags = await Sale.find({}, { tags: 1 }).lean();
+    const tagDocs = await Sale.aggregate([
+      { $match: { tags: { $exists: true, $ne: "" } } },
+      {
+        $project: {
+          tagsArray: {
+            $map: {
+              input: { $split: ["$tags", ","] },
+              as: "t",
+              in: { $trim: { input: "$$t" } },
+            },
+          },
+        },
+      },
+      { $unwind: "$tagsArray" },
+      { $match: { tagsArray: { $ne: "" } } },
+      { $group: { _id: null, allTags: { $addToSet: "$tagsArray" } } },
+      { $project: { _id: 0, allTags: 1 } },
+    ]);
 
-    const allTagsSet = new Set();
-    docsWithTags.forEach((doc) => {
-      if (!doc.tags) return;
-      doc.tags
-        .split(",")
-        .map((t) => t.trim())
-        .filter(Boolean)
-        .forEach((t) => allTagsSet.add(t));
-    });
+    const allTags = tagDocs[0]?.allTags ?? [];
 
     const payload = {
       regions: regions.filter(Boolean),
       genders: genders.filter(Boolean),
       categories: categories.filter(Boolean),
       paymentMethods: paymentMethods.filter(Boolean),
-      tags: Array.from(allTagsSet).sort(),
+      tags: allTags.sort(),
     };
 
     filterCache = payload;
@@ -221,6 +227,7 @@ const getFilterOptions = async (req, res) => {
 
     res.json(payload);
   } catch (error) {
+    console.error("getFilterOptions error:", error);
     res.status(500).json({ error: error.message });
   }
 };
