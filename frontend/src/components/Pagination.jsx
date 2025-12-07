@@ -3,10 +3,8 @@ import { cn } from "../libs/utils";
 export function Pagination({ currentPage, totalPages, onPageChange }) {
   if (totalPages <= 1) return null;
 
-  // how many pages to show at a time
   const PAGE_WINDOW = 6;
 
-  // determine window start based on current page
   const windowStart = Math.max(
     1,
     Math.min(
@@ -37,7 +35,6 @@ export function Pagination({ currentPage, totalPages, onPageChange }) {
 
   return (
     <div className="flex items-center justify-center gap-1 mt-4">
-      {/* previous window arrow */}
       {canGoPrevWindow && (
         <button
           onClick={goPrevWindow}
@@ -62,7 +59,6 @@ export function Pagination({ currentPage, totalPages, onPageChange }) {
         </button>
       ))}
 
-      {/* next window arrow */}
       {canGoNextWindow && (
         <button
           onClick={goNextWindow}

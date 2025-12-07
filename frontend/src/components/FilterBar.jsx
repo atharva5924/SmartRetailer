@@ -13,7 +13,6 @@ export function FilterBar({
   if (loading) {
     return (
       <div className="flex flex-wrap gap-3">
-        {/* skeleton pills matching your filter style */}
         {Array.from({ length: 6 }).map((_, i) => (
           <div
             key={i}

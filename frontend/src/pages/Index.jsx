@@ -5,7 +5,7 @@ import { FilterBar } from "../components/FilterBar";
 import { MetricCards } from "../components/MetricCards";
 import { SalesTable } from "../components/SalesTable";
 import { Pagination } from "../components/Pagination";
-import { fetchSales, fetchFilterOptions } from "../services/api"; // adjust path if needed
+import { fetchSales, fetchFilterOptions } from "../services/api"; 
 
 const initialFilters = {
   region: "",
@@ -15,7 +15,7 @@ const initialFilters = {
   tags: "",
   paymentMethod: "",
   dateRange: { start: "", end: "" },
-  sortBy: "date-desc", // backend expects "date" | "quantity" | "customerName"
+  sortBy: "date-desc", 
 };
 
 const Index = () => {
@@ -52,14 +52,12 @@ const Index = () => {
     };
   }, [filters]);
 
-  // Fetch on mount (use your api.js function)
   useEffect(() => {
     const loadFilterOptions = async () => {
       try {
         setFiltersLoading(true);
         const data = await fetchFilterOptions();
         console.log("Fetched filter options:", data);
-        // Transform API response → component format
         const options = [
           {
             id: "region",
@@ -112,20 +110,17 @@ const Index = () => {
     loadFilterOptions();
   }, []);
 
-  // Memoize filter handler to prevent infinite re-renders
   const handleFilterChange = useCallback((key, value) => {
     setFilters((prev) => ({ ...prev, [key]: value }));
     setCurrentPage(1);
   }, []);
 
-  // Memoize reset handler
   const handleResetFilters = useCallback(() => {
     setFilters(initialFilters);
     setSearchQuery("");
     setCurrentPage(1);
   }, []);
 
-  // Memoize page handler
   const handlePageChange = useCallback((page) => {
     setCurrentPage(page);
   }, []);

@@ -7,7 +7,6 @@ export function DateDropdown({ value, onChange }) {
   const [isApplying, setIsApplying] = useState(false);
   const wrapperRef = useRef(null);
 
-  // Close on outside click
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (wrapperRef.current && !wrapperRef.current.contains(event.target)) {

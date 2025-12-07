@@ -130,7 +130,6 @@ export function Sidebar() {
 
   return (
     <aside className="w-64 min-h-screen bg-sidebar flex flex-col">
-      {/* Header */}
       <div className="p-1 border-b border-sidebar-muted">
         <div className="flex items-center gap-3">
           <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-primary to-blue-600 flex items-center justify-center">
@@ -145,8 +144,6 @@ export function Sidebar() {
           </div>
         </div>
       </div>
-
-      {/* Navigation */}
       <nav className="flex-1 p-3 space-y-1 overflow-y-auto bg-gray-100">
         {menuItems.map((item) => renderMenuItem(item))}
       </nav>

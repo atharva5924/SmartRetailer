@@ -18,7 +18,6 @@ export function RangeDropdown({
   const currentMin = value?.min ?? min;
   const currentMax = value?.max ?? max;
 
-  // Close on outside click
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (wrapperRef.current && !wrapperRef.current.contains(event.target)) {
