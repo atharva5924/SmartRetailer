@@ -57,7 +57,6 @@ const Index = () => {
       try {
         setFiltersLoading(true);
         const data = await fetchFilterOptions();
-        console.log("Fetched filter options:", data);
         const options = [
           {
             id: "region",
