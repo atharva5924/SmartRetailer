@@ -238,12 +238,12 @@ Routes are mounted at `/api/sales` prefix and delegate to controllers.
 
 ```
 project-root/
-├── client/ # React Frontend
+├── frontend/ # React Frontend
 │ ├── src/
 │ │ ├── pages/
 │ │ │ └── Index.jsx # Main page (state, data fetching)
+│ │ │ └── NotFound.jsx # For Notfound page
 │ │ ├── components/
-│ │ │ ├── App.jsx # App root wrapper
 │ │ │ ├── Sidebar.jsx # Sidebar layout
 │ │ │ ├── SearchBar.jsx # Search input
 │ │ │ ├── FilterBar.jsx # Filter dropdowns and controls
@@ -256,6 +256,7 @@ project-root/
 │ │ │ └── api.js # Axios instance, API functions
 │ │ ├── libs/
 │ │ │ └── utils.js # cn() helper (clsx + twMerge)
+│ │ ├── App.jsx # App root wrapper
 │ │ ├── index.css # Global styles, design tokens
 │ │ └── main.jsx # React entry point
 │ └── package.json
@@ -265,6 +266,8 @@ project-root/
 │ │ ├── server.js # Express setup, MongoDB connection
 │ │ ├── routes/
 │ │ │ └── sales.routes.js # GET /api/sales, /api/filter-options
+│ │ ├── db/
+│ │ │ └── index.js # Database connection file
 │ │ ├── controllers/
 │ │ │ └── sales.controllers.js # getSales, getFilterOptions logic
 │ │ └── models/
@@ -339,7 +342,7 @@ project-root/
 2. **Filter Options Caching** (5-minute TTL): Avoids repeated database queries for static filter values
 3. **Lean Queries**: `.lean()` used in Mongoose for faster read-only queries
 4. **Indexed Fields**: All filter fields (`date`, `customerName`, `customerRegion`, etc.) are indexed for fast lookups
-5. **Pagination**: Only fetches 15 records per page instead of entire dataset
+5. **Pagination**: Only fetches 10 records per page instead of entire dataset
 6. **Stats on Current Page**: Metrics calculated only for visible rows, not entire dataset
 
 ---
