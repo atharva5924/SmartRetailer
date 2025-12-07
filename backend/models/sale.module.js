@@ -1,6 +1,8 @@
 import mongoose, { Schema } from "mongoose";
 
 const saleSchema = new Schema({
+ 
+  date: String,
   customerId: String,
   customerName: String,
   phoneNumber: String,
@@ -21,7 +23,6 @@ const saleSchema = new Schema({
   totalAmount: Number,
   finalAmount: Number,
 
-  date: Date,
   paymentMethod: String,
   orderStatus: String,
   deliveryType: String,
