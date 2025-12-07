@@ -56,7 +56,7 @@ export function FilterBar({
       ))}
 
       {/* Sort By */}
-      <div className="relative ml-9">
+      <div className="relative ml-8">
         <select
           value={filters.sortBy}
           onChange={(e) => onFilterChange("sortBy", e.target.value)}

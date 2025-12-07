@@ -54,7 +54,7 @@ const getSales = async (req, res) => {
     const {
       search,
       filters = "{}",
-      sort = "date",
+      sort = "date-asc",
       page = 1,
       limit = 10,
     } = req.query;
@@ -77,14 +77,17 @@ const getSales = async (req, res) => {
     // Sorting
     let sortObj = {};
     switch (sort) {
-      case "date":
+      case "date-desc":
         sortObj = { date: -1 }; // Newest first
         break;
-      case "quantity":
-        sortObj = { quantity: -1 };
+      case "date-asc":
+        sortObj = { date: 1 };
         break;
-      case "customerName":
+      case "name-asc":
         sortObj = { customerName: 1 };
+        break;
+      case "name-desc":
+        sortObj = { customerName: -1 };
         break;
       default:
         sortObj = { date: -1 };

@@ -15,7 +15,7 @@ const initialFilters = {
   tags: "",
   paymentMethod: "",
   date: "",
-  sortBy: "date", // backend expects "date" | "quantity" | "customerName"
+  sortBy: "date-desc", // backend expects "date" | "quantity" | "customerName"
 };
 
 const Index = () => {
@@ -116,7 +116,11 @@ const Index = () => {
     const loadSales = async () => {
       setLoading(true);
       setError(null);
-
+      console.log("Loading sales with:", {
+        searchQuery,
+        filters,
+        currentPage,
+      }); 
       try {
         const filterPayload = {
           region: filters.region ? [filters.region] : [],
@@ -131,7 +135,7 @@ const Index = () => {
         const result = await fetchSales({
           search: searchQuery || "",
           filters: filterPayload,
-          sort: filters.sortBy || "date",
+          sort: filters.sortBy || "date-asc",
           page: currentPage,
           limit: 15,
         });
