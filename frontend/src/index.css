@@ -957,7 +957,7 @@ body {
   font-size: var(--font-size-sm);
   border: 1px solid var(--border);
   border-radius: var(--radius-base);
-  background-color: var(--card);
+  background-color: #f0f0f0;
   cursor: pointer;
   transition: background-color var(--duration-fast) var(--ease-standard);
   color: var(--card-foreground);
