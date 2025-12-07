@@ -70,11 +70,6 @@ const Index = () => {
             options: [...data.categories],
           },
           {
-            id: "ageRange",
-            label: "Age Range",
-            options: ["All Ages", "18-25", "26-35", "36-45", "46-55", "55+"],
-          },
-          {
             id: "tags",
             label: "Tags",
             options: [...data.tags],
@@ -82,18 +77,7 @@ const Index = () => {
           {
             id: "paymentMethod",
             label: "Payment Method",
-            options: ["All Methods", ...data.paymentMethods],
-          },
-          {
-            id: "date",
-            label: "Date",
-            options: [
-              "All Time",
-              "Today",
-              "This Week",
-              "This Month",
-              "This Year",
-            ],
+            options: [...data.paymentMethods],
           },
         ];
 
