@@ -79,7 +79,7 @@ A full-stack MERN application for managing and analyzing sales transactions with
 
 - Tracks `currentPage` and `totalPages` state
 - `Pagination` component handles page navigation (next/prev/direct)
-- Results fetched per page with `limit: 15`
+- Results fetched per page with `limit: 10`
 - Current page reset when filters or search changes
 
 **Backend (sales.controllers.js):**
