@@ -1,6 +1,7 @@
-import { ChevronDown, RotateCcw } from "lucide-react";
+import { ChevronDown, RotateCcw, X } from "lucide-react";
 import { RangeDropdown } from "./RangeDropdown";
 import { DateDropdown } from "./DateDropdown";
+import { MultiSelectDropdown } from "./MultiSelectDropdown";
 import { cn } from "../libs/utils";
 
 export function FilterBar({
@@ -10,6 +11,8 @@ export function FilterBar({
   onReset,
   loading,
 }) {
+  console.log("Current Filters:", filterOptions);
+
   if (loading) {
     return (
       <div className="flex flex-wrap gap-3">
@@ -24,43 +27,74 @@ export function FilterBar({
       </div>
     );
   }
+
+  // Multi-select filter IDs
+  const multiSelectIds = [
+    "region",
+    "gender",
+    "category",
+    "tags",
+    "paymentMethod",
+  ];
+
   return (
     <div className="flex items-center gap-2 flex-wrap">
       {/* Reset Button */}
       <button
         onClick={onReset}
         className="filter-dropdown text-muted-foreground hover:text-foreground"
+        title="Reset all filters"
       >
         <RotateCcw className="w-4 h-4" />
       </button>
+
       {/* Filter Dropdowns */}
-      {filterOptions
-        .filter((f) => !["ageRange", "date"].includes(f.id))
-        .map((filter) => (
-          <div key={filter.id} className="relative">
-            <select
-              value={filters[filter.id]}
-              onChange={(e) => onFilterChange(filter.id, e.target.value)}
-              className={cn(
-                "filter-dropdown appearance-none",
-                filter.id === "category" && "min-w-[140px]",
-                filter.id === "region" && "min-w-[125px]",
-                filter.id === "gender" && "min-w-[75px]",
-                filter.id === "region" && "min-w-[130px]",
-                filter.id === "paymentMethod" && "min-w-[140px]",
-                "focus:outline-none focus:ring-2 focus:ring-primary/20"
-              )}
-            >
-              <option value="">{filter.label}</option>
-              {filter.options.map((option) => (
-                <option key={option} value={option}>
-                  {option}
-                </option>
-              ))}
-            </select>
-            <ChevronDown className="w-4 h-4 absolute right-2 top-1/2 -translate-y-1/2 pointer-events-none text-muted-foreground" />
-          </div>
-        ))}
+      {filterOptions.map((filter) => {
+        // Skip special filters
+        if (["ageRange", "dateRange"].includes(filter.id)) return null;
+
+        const isMultiSelect = multiSelectIds.includes(filter.id);
+        const selectedValues = isMultiSelect
+          ? filters[filter.id] || []
+          : filters[filter.id] || "";
+
+        if (isMultiSelect) {
+          return (
+            <MultiSelectDropdown
+              key={filter.id}
+              id={filter.id}
+              label={filter.label}
+              options={filter.options}
+              selectedValues={selectedValues}
+              onChange={(newValues) => onFilterChange(filter.id, newValues)}
+            />
+          );
+        } else {
+          // Single select (fallback, not used now)
+          return (
+            <div key={filter.id} className="relative">
+              <select
+                value={selectedValues}
+                onChange={(e) => onFilterChange(filter.id, e.target.value)}
+                className={cn(
+                  "filter-dropdown appearance-none pr-8 !w-auto",
+                  "focus:outline-none focus:ring-2 focus:ring-primary/20"
+                )}
+              >
+                <option value="">{filter.label}</option>
+                {filter.options.map((option) => (
+                  <option key={option} value={option}>
+                    {option}
+                  </option>
+                ))}
+              </select>
+              <ChevronDown className="w-4 h-4 absolute right-2 top-1/2 -translate-y-1/2 pointer-events-none text-muted-foreground" />
+            </div>
+          );
+        }
+      })}
+
+      {/* Age Range Dropdown */}
       <RangeDropdown
         id="ageRange"
         label="Age"
@@ -69,18 +103,20 @@ export function FilterBar({
         value={filters.ageRange}
         onChange={(value) => onFilterChange("ageRange", value)}
       />
+
+      {/* Date Range Dropdown */}
       <DateDropdown
-        key="dateRange"
         value={filters.dateRange}
         onChange={(value) => onFilterChange("dateRange", value)}
       />
+
       {/* Sort By */}
-      <div className="relative ml-30">
+      <div className="relative ml-8">
         <select
           value={filters.sortBy}
           onChange={(e) => onFilterChange("sortBy", e.target.value)}
           className={cn(
-            "filter-dropdown appearance-none pr-8 w-70",
+            "filter-dropdown appearance-none pr-8 w-60",
             "focus:outline-none focus:ring-2 focus:ring-primary/20"
           )}
         >
@@ -96,3 +132,6 @@ export function FilterBar({
     </div>
   );
 }
+
+// Multi-Select Dropdown Component
+

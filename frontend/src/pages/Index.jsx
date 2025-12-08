@@ -8,12 +8,12 @@ import { Pagination } from "../components/Pagination";
 import { fetchSales, fetchFilterOptions } from "../services/api";
 
 const initialFilters = {
-  region: "",
-  gender: "",
+  region: [],
+  gender: [],
   ageRange: { min: 18, max: 75 },
-  category: "",
-  tags: "",
-  paymentMethod: "",
+  category: [],
+  tags: [],
+  paymentMethod: [],
   dateRange: { start: "", end: "" },
   sortBy: "date-desc",
 };
@@ -112,19 +112,37 @@ const Index = () => {
       setLoading(true);
       setError(null);
       try {
+        // const filterPayload = {
+        //   region: debouncedFilters.region ? [debouncedFilters.region] : [],
+        //   gender: debouncedFilters.gender ? [debouncedFilters.gender] : [],
+        //   ageRange: debouncedFilters.ageRange
+        //     ? `${debouncedFilters.ageRange.min}-${debouncedFilters.ageRange.max}`
+        //     : null,
+        //   category: debouncedFilters.category
+        //     ? [debouncedFilters.category]
+        //     : [],
+        //   tags: debouncedFilters.tags ? [debouncedFilters.tags] : [],
+        //   paymentMethod: debouncedFilters.paymentMethod
+        //     ? [debouncedFilters.paymentMethod]
+        //     : [],
+        //   dateRange:
+        //     debouncedFilters.dateRange?.start && debouncedFilters.dateRange?.end
+        //       ? [
+        //           debouncedFilters.dateRange.start,
+        //           debouncedFilters.dateRange.end,
+        //         ]
+        //       : null,
+        // };
+
         const filterPayload = {
-          region: debouncedFilters.region ? [debouncedFilters.region] : [],
-          gender: debouncedFilters.gender ? [debouncedFilters.gender] : [],
+          region: debouncedFilters.region,
+          gender: debouncedFilters.gender,
           ageRange: debouncedFilters.ageRange
             ? `${debouncedFilters.ageRange.min}-${debouncedFilters.ageRange.max}`
             : null,
-          category: debouncedFilters.category
-            ? [debouncedFilters.category]
-            : [],
-          tags: debouncedFilters.tags ? [debouncedFilters.tags] : [],
-          paymentMethod: debouncedFilters.paymentMethod
-            ? [debouncedFilters.paymentMethod]
-            : [],
+          category: debouncedFilters.category,
+          tags: debouncedFilters.tags,
+          paymentMethod: debouncedFilters.paymentMethod,
           dateRange:
             debouncedFilters.dateRange?.start && debouncedFilters.dateRange?.end
               ? [
