@@ -35,6 +35,8 @@ const Index = () => {
   const [filtersLoading, setFiltersLoading] = useState(true);
   const [debouncedFilters, setDebouncedFilters] = useState(filters);
   const debounceTimeoutRef = useRef(null);
+  const [debouncedSearch, setDebouncedSearch] = useState("");
+  const searchTimeoutRef = useRef(null);
 
   useEffect(() => {
     if (debounceTimeoutRef.current) {
@@ -51,6 +53,20 @@ const Index = () => {
       }
     };
   }, [filters]);
+
+  useEffect(() => {
+    if (searchTimeoutRef.current) {
+      clearTimeout(searchTimeoutRef.current);
+    }
+    searchTimeoutRef.current = setTimeout(() => {
+      setDebouncedSearch(searchQuery);
+    }, 1000);
+    return () => {
+      if (searchTimeoutRef.current) {
+        clearTimeout(searchTimeoutRef.current);
+      }
+    };
+  }, [searchQuery]);
 
   useEffect(() => {
     const loadFilterOptions = async () => {
@@ -112,28 +128,6 @@ const Index = () => {
       setLoading(true);
       setError(null);
       try {
-        // const filterPayload = {
-        //   region: debouncedFilters.region ? [debouncedFilters.region] : [],
-        //   gender: debouncedFilters.gender ? [debouncedFilters.gender] : [],
-        //   ageRange: debouncedFilters.ageRange
-        //     ? `${debouncedFilters.ageRange.min}-${debouncedFilters.ageRange.max}`
-        //     : null,
-        //   category: debouncedFilters.category
-        //     ? [debouncedFilters.category]
-        //     : [],
-        //   tags: debouncedFilters.tags ? [debouncedFilters.tags] : [],
-        //   paymentMethod: debouncedFilters.paymentMethod
-        //     ? [debouncedFilters.paymentMethod]
-        //     : [],
-        //   dateRange:
-        //     debouncedFilters.dateRange?.start && debouncedFilters.dateRange?.end
-        //       ? [
-        //           debouncedFilters.dateRange.start,
-        //           debouncedFilters.dateRange.end,
-        //         ]
-        //       : null,
-        // };
-
         const filterPayload = {
           region: debouncedFilters.region,
           gender: debouncedFilters.gender,
@@ -153,7 +147,7 @@ const Index = () => {
         };
 
         const result = await fetchSales({
-          search: searchQuery || "",
+          search: debouncedSearch  || "",
           filters: filterPayload,
           sort: filters.sortBy || "date-asc",
           page: currentPage,
@@ -186,7 +180,7 @@ const Index = () => {
     };
 
     loadSales();
-  }, [currentPage, debouncedFilters, searchQuery]);
+  }, [currentPage, debouncedFilters, debouncedSearch]);
 
   return (
     <div className="flex min-h-screen bg-background">
